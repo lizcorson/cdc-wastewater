@@ -2,11 +2,16 @@ import React from 'react';
 import axios from 'axios';
 import Plot from 'react-plotly.js';
 import Container from 'react-bootstrap/Container';
+import Form from 'react-bootstrap/Form';
+import Col from 'react-bootstrap/Col';
+import Row from 'react-bootstrap/Row'
 import _ from 'lodash';
 export default class PersonList extends React.Component {
   state = {
     datapoints: [],
     sites: [],
+    statesList: [],
+    sitesByState: [],
   }
 
   getWWDByID(id) {
@@ -14,21 +19,23 @@ export default class PersonList extends React.Component {
     .then(res => {
       const datapoints = res.data;
       this.setState({ datapoints });
-      console.log(datapoints.length);
     })
   }
 
   getWWDSites() {
-    axios.get(`https://data.cdc.gov/resource/2ew6-ywp6.json?$select=key_plot_id, wwtp_id, wwtp_jurisdiction, county_names&$limit=5000`)
+    axios.get(`https://data.cdc.gov/resource/2ew6-ywp6.json?$select=key_plot_id, wwtp_id, wwtp_jurisdiction, county_names&$limit=10000&$order=date_end DESC`)
     .then(res => {
       let sites = res.data;
-      console.log(sites.length);
       sites = [
         ...new Map(sites.map((item) => [item["key_plot_id"], item])).values()];
       sites = _.sortBy(sites, ['wwtp_jurisdiction', 'county_names']);
+
+      let statesList = sites.map((s) => s.wwtp_jurisdiction);
+      statesList = Array.from(new Set(statesList));
     
-      console.log(sites);
+      console.log(statesList);
       this.setState({ sites });
+      this.setState({ statesList });
     })
   }
 
@@ -44,6 +51,25 @@ export default class PersonList extends React.Component {
     return (
         <Container>
         <h1>CDC Wastewater Data</h1>
+
+        <Form>
+            <Row>
+                <Col>
+                    <Form.Select aria-label="state">
+                        <option>Select your state</option>
+                        {this.state.statesList.map(s => <option value={s}>{s}</option>
+                        )}
+                    </Form.Select>
+                </Col>
+                <Col>
+                    <Form.Select aria-label="site">
+                        <option>Select your site</option>
+                        {this.state.sitesByState.map(s => <option value={s}>{s}</option>
+                        )}
+                    </Form.Select>
+                </Col>
+            </Row>
+        </Form>
         
         <Plot data={[
             {

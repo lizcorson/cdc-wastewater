@@ -41,8 +41,8 @@ export default class PersonList extends React.Component {
         ]} 
             layout={
                     {
-                        title: 'Plot Title',
-                        xaxis: {title: 'Date'},
+                        title: 'Current Virus Levels',
+                        xaxis: {title: '14-Day Sample End Date'},
                         yaxis: {title: 'Percentile'}
                     }
                    }

@@ -13,7 +13,7 @@ export default class Data extends React.Component {
     statesList: [],
     sitesByState: [],
     currentState: '',
-    currentSiteKey: '',
+    currentSiteKey: 'default',
     currentCounty: '',
   };
 
@@ -58,7 +58,7 @@ export default class Data extends React.Component {
     this.setState({ [e.target.name]: e.target.value });
     if (e.target.name === 'currentState') {
       this.setWWDSitesByState(e.target.value);
-      const currentSiteKey = '';
+      const currentSiteKey = 'default';
       this.setState({ currentSiteKey });
     } else if (e.target.name === 'currentSiteKey') {
       this.getWWDByID(e.target.value);
@@ -83,15 +83,15 @@ export default class Data extends React.Component {
           <Form>
             <Row>
               <Col>
-                <Form.Select aria-label="state" name="currentState" onChange={this.handleChange}>
+                <Form.Select aria-label="state" name="currentState" onChange={this.handleChange} value={this.state.currentState}>
                   <option value="">Select your state</option>
                   {this.state.statesList.map((s, i) => <option value={s} key={i}>{s}</option>
                   )}
                 </Form.Select>
               </Col>
               <Col>
-                <Form.Select aria-label="site" name="currentSiteKey" onChange={this.handleChange}>
-                  <option value="">Select your county or site</option>
+                <Form.Select aria-label="site" name="currentSiteKey" onChange={this.handleChange} value={this.state.currentSiteKey}>
+                  <option value="default">Select your county or site</option>
                   {this.state.sitesByState.map((s, i) => <option value={s.key_plot_id} key={i}>{this.countyNameDisplay(s.county_names, s.wwtp_id)}</option>
                   )}
                 </Form.Select>
@@ -100,7 +100,7 @@ export default class Data extends React.Component {
           </Form>
         </Row>
         <Row className="my-5">
-          {this.state.currentSiteKey.length > 0 && 
+          {this.state.currentSiteKey !== 'default' && 
         <>
           <h2>Data for {this.state.currentState} - {this.state.currentCounty.replace(/,/g, ', ')}</h2>
           <h6>CDC Site Label: {this.state.currentSiteKey}</h6>

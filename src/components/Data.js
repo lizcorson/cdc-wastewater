@@ -31,7 +31,7 @@ export default class Data extends React.Component {
         let sites = res.data;
         sites = [
           ...new Map(sites.map((item) => [item['key_plot_id'], item])).values()];
-        sites = _.sortBy(sites, ['wwtp_jurisdiction', 'county_names']);
+        sites = _.sortBy(sites, ['wwtp_jurisdiction', 'county_names', 'wwtp_id']);
 
         let statesList = sites.map((s) => s.wwtp_jurisdiction);
         statesList = Array.from(new Set(statesList));
@@ -48,6 +48,10 @@ export default class Data extends React.Component {
 
   componentDidMount() {
     this.getWWDSites();
+  }
+
+  countyNameDisplay(countyName, wwtpId) {
+    return countyName.replace(/,/g, ', ') + ` (#${wwtpId})`;
   }
 
   handleChange = e => {
@@ -88,7 +92,7 @@ export default class Data extends React.Component {
               <Col>
                 <Form.Select aria-label="site" name="currentSiteKey" onChange={this.handleChange}>
                   <option value="">Select your county or site</option>
-                  {this.state.sitesByState.map((s, i) => <option value={s.key_plot_id} key={i}>{s.county_names}</option>
+                  {this.state.sitesByState.map((s, i) => <option value={s.key_plot_id} key={i}>{this.countyNameDisplay(s.county_names, s.wwtp_id)}</option>
                   )}
                 </Form.Select>
               </Col>
@@ -98,7 +102,7 @@ export default class Data extends React.Component {
         <Row className="my-5">
           {this.state.currentSiteKey.length > 0 && 
         <>
-          <h2>Data for {this.state.currentState} - {this.state.currentCounty}</h2>
+          <h2>Data for {this.state.currentState} - {this.state.currentCounty.replace(/,/g, ', ')}</h2>
           <h6>CDC Site Label: {this.state.currentSiteKey}</h6>
           <Plot data={[
             {

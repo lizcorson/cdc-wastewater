@@ -14,6 +14,7 @@ export default class Data extends React.Component {
     sitesByState: [],
     currentState: '',
     currentSiteKey: '',
+    currentCounty: '',
   };
 
   getWWDByID(id) {
@@ -53,15 +54,21 @@ export default class Data extends React.Component {
     this.setState({ [e.target.name]: e.target.value });
     if (e.target.name === 'currentState') {
       this.setWWDSitesByState(e.target.value);
+      const currentSiteKey = '';
+      this.setState({ currentSiteKey });
     } else if (e.target.name === 'currentSiteKey') {
       this.getWWDByID(e.target.value);
+      const currentCountyArray = _.filter(this.state.sites, {'key_plot_id': e.target.value});
+      const currentCounty = currentCountyArray[0].county_names;
+      this.setState({ currentCounty });
     }
   };
 
   render() {
-    let percentile = this.state.datapoints.map(a => a.percentile);
+    let percentile = this.state.datapoints.map(a => a.percentile).map(Number);
     let date_end = this.state.datapoints.map(a => a.date_end);
-    let ptc_15d = this.state.datapoints.map(a => a.ptc_15d);
+    let ptc_15d = this.state.datapoints.map(a => a.ptc_15d).map(Number);
+
     return (
       <Container>
         <Row className="m-5">
@@ -80,7 +87,7 @@ export default class Data extends React.Component {
               </Col>
               <Col>
                 <Form.Select aria-label="site" name="currentSiteKey" onChange={this.handleChange}>
-                  <option>Select your site</option>
+                  <option>Select your county or site</option>
                   {this.state.sitesByState.map((s, i) => <option value={s.key_plot_id} key={i}>{s.county_names}</option>
                   )}
                 </Form.Select>
@@ -91,6 +98,8 @@ export default class Data extends React.Component {
         <Row className="m-5">
           {this.state.currentSiteKey.length > 0 && 
         <>
+          <h2>Data for {this.state.currentState} - {this.state.currentCounty}</h2>
+          <h6>CDC Site Label: {this.state.currentSiteKey}</h6>
           <Plot data={[
             {
               x: date_end,

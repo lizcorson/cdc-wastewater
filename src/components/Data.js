@@ -5,6 +5,7 @@ import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
+import About from './About';
 import _ from 'lodash';
 export default class Data extends React.Component {
   state = {
@@ -20,8 +21,7 @@ export default class Data extends React.Component {
   getWWDByID(id) {
     axios.get(`https://data.cdc.gov/resource/2ew6-ywp6.json?key_plot_id=${id}&$order=date_end ASC`)
       .then(res => {
-        const datapoints = res.data;
-        this.setState({ datapoints });
+        this.setState({ datapoints: res.data });
       });
   }
 
@@ -36,8 +36,7 @@ export default class Data extends React.Component {
         let statesList = sites.map((s) => s.wwtp_jurisdiction);
         statesList = Array.from(new Set(statesList));
     
-        this.setState({ sites });
-        this.setState({ statesList });
+        this.setState({ sites: sites, statesList: statesList});
       });
   }
 
@@ -59,12 +58,12 @@ export default class Data extends React.Component {
     if (e.target.name === 'currentState') {
       this.setWWDSitesByState(e.target.value);
       const currentSiteKey = 'default';
-      this.setState({ currentSiteKey });
+      this.setState({ currentSiteKey: currentSiteKey });
     } else if (e.target.name === 'currentSiteKey') {
       this.getWWDByID(e.target.value);
       const currentCountyArray = _.filter(this.state.sites, {'key_plot_id': e.target.value});
       const currentCounty = currentCountyArray[0].county_names;
-      this.setState({ currentCounty });
+      this.setState({ currentCounty: currentCounty });
     }
   };
 
@@ -116,7 +115,7 @@ export default class Data extends React.Component {
           layout={
             {
               title: 'Current Virus Levels',
-              xaxis: {title: '14-Day Sample End Date'},
+              xaxis: {title: '15-Day Sample End Date'},
               yaxis: {title: 'Percentile'}
             }
           }
@@ -133,7 +132,7 @@ export default class Data extends React.Component {
           layout={
             {
               title: '% Change over the Last 15 Days',
-              xaxis: {title: '14-Day Sample End Date'},
+              xaxis: {title: '15-Day Sample End Date'},
               yaxis: {title: '% Change'}
             }
           }
@@ -141,12 +140,7 @@ export default class Data extends React.Component {
         </>}
         </Row>
         <Row className="my-5">
-          <h2>What does this mean?</h2>
-          <p>The CDC provides defitions on their <a href="https://covid.cdc.gov/covid-data-tracker/#wastewater-surveillance">wastewater surveillance page</a> in the About the Data section. Please note that data between sites is not comparable. Use the historical data to see trends at a single site.</p>
-          <h2>Data Source</h2>
-          <p>Thanks to the CDC for providing an API to access their <a href="https://data.cdc.gov/Public-Health-Surveillance/NWSS-Public-SARS-CoV-2-Wastewater-Metric-Data/2ew6-ywp6">data</a>!</p>
-          <h2>Code</h2>
-          <p>This project is <a href="https://github.com/lizcorson/cdc-wastewater">open source</a> and something I threw together in my free time.</p>
+          <About />
         </Row>
       </Container>
     );

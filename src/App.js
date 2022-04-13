@@ -5,7 +5,7 @@ import Data from './components/Data.js';
 
 function App() {
   return (
-    <div className="App">
+    <div>
       <Data />
     </div>
   );

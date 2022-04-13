@@ -71,11 +71,11 @@ export default class Data extends React.Component {
 
     return (
       <Container>
-        <Row className="m-5">
+        <Row className="my-5">
           <h1>CDC COVID Wastewater Data</h1>
         </Row>
 
-        <Row className="m-5">
+        <Row className="my-5">
           <Form>
             <Row>
               <Col>
@@ -95,7 +95,7 @@ export default class Data extends React.Component {
             </Row>
           </Form>
         </Row>
-        <Row className="m-5">
+        <Row className="my-5">
           {this.state.currentSiteKey.length > 0 && 
         <>
           <h2>Data for {this.state.currentState} - {this.state.currentCounty}</h2>
@@ -136,7 +136,7 @@ export default class Data extends React.Component {
           />
         </>}
         </Row>
-        <Row className="m-5">
+        <Row className="my-5">
           <h2>What does this mean?</h2>
           <p>The CDC provides defitions on their <a href="https://covid.cdc.gov/covid-data-tracker/#wastewater-surveillance">wastewater surveillance page</a> in the About the Data section. Please note that data between sites is not comparable. Use the historical data to see trends at a single site.</p>
           <h2>Data Source</h2>

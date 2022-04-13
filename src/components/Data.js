@@ -80,14 +80,14 @@ export default class Data extends React.Component {
             <Row>
               <Col>
                 <Form.Select aria-label="state" name="currentState" onChange={this.handleChange}>
-                  <option>Select your state</option>
+                  <option value="">Select your state</option>
                   {this.state.statesList.map((s, i) => <option value={s} key={i}>{s}</option>
                   )}
                 </Form.Select>
               </Col>
               <Col>
                 <Form.Select aria-label="site" name="currentSiteKey" onChange={this.handleChange}>
-                  <option>Select your county or site</option>
+                  <option value="">Select your county or site</option>
                   {this.state.sitesByState.map((s, i) => <option value={s.key_plot_id} key={i}>{s.county_names}</option>
                   )}
                 </Form.Select>
